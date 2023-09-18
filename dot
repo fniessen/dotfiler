@@ -1,0 +1,83 @@
+#!/bin/bash
+
+DEFAULT_BASE_DIR="$(dirname "$(dirname "$(readlink -f "$0")")")"
+export PATH="$DEFAULT_BASE_DIR/bin/lib:$PATH"
+DEFAULT_HOME_DIR="$HOME"
+
+# Usage
+read -r -d '' USAGE <<EOF
+Dotfiles manager
+
+Usage:
+  dot update [--dry] [--verbose] [--base-dir=<base-dir>] [--home-dir=<home-dir>] [--skip-pull]
+  dot status [--base-dir=<base-dir>]
+  dot add [--base-dir=<base-dir>] [--verbose] <url>...
+  dot (-h | --help)
+  dot --version
+
+Options:
+  -h --help                Show this screen.
+  --version                Show version.
+  -v --verbose             More verbose output.
+  --dry                    Don't make real modification, just print what will be done.
+  --base-dir=<base-dir>    Directory to search environments [default: $DEFAULT_BASE_DIR].
+  --home-dir=<home-dir>    Directory, where files should be linked to [default: $DEFAULT_HOME_DIR].
+EOF
+
+# Parse command line arguments
+eval "$(docopt <<EOF
+$USAGE
+EOF
+)"
+
+# Define functions for dot commands
+update() {
+    # Implementation for 'dot update'
+    # You can replace this with your actual update logic
+    echo "Running 'dot update' with arguments:"
+    echo "--dry: $--dry"
+    echo "--verbose: $--verbose"
+    echo "--base-dir: $--base-dir"
+    echo "--home-dir: $--home-dir"
+    echo "--skip-pull: $--skip-pull"
+}
+
+status() {
+    # Implementation for 'dot status'
+    # You can replace this with your actual status logic
+    echo "Running 'dot status' with arguments:"
+    echo "--base-dir: $--base-dir"
+}
+
+add() {
+    # Implementation for 'dot add'
+    # You can replace this with your actual add logic
+    echo "Running 'dot add' with arguments:"
+    echo "--base-dir: $--base-dir"
+    echo "--verbose: $--verbose"
+    echo "URLs: ${@:2}"  # URLs start from the 2nd argument
+}
+
+# Main script logic
+case "$1" in
+    update)
+        update
+        ;;
+    status)
+        status
+        ;;
+    add)
+        add "${@:2}"  # Pass all arguments except the first one to 'add'
+        ;;
+    -h|--help)
+        echo "$USAGE"
+        ;;
+    --version)
+        echo "dot 0.5.0"
+        ;;
+    *)
+        echo "Unrecognized command: $1" >&2
+        echo "$USAGE" >&2
+        exit 1
+        ;;
+esac
